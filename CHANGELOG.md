@@ -1,5 +1,7 @@
 # Table of Contents
 
+- [1.0.0](#100)
+- [0.15.0](#0150)
 - [0.14.1](#0141)
 - [0.14.0](#0140---20180705)
 - [0.13.1](#0131---20180423)
@@ -17,6 +19,89 @@
 - [0.10.1](#0101---20170327)
 - [0.10.0](#0100---20170307)
 - [0.9.9 and prior](#099---20170202)
+
+## [1.0.0]
+
+> Released on: 2018/11/17
+
+
+
+
+
+## [0.15.0]
+
+> Released on: 2018/11/17
+
+### Breaking changes
+
+##### Core
+
+- Luaossl version bumped to 20180708 [#3624](https://github.com/Kong/kong/pull/3624)
+- New kong.resty.getssl module [#3681](https://github.com/Kong/kong/pull/3681)
+- Timestaps now allow millisecond precision [#3660](https://github.com/Kong/kong/pull/3660)
+- All entities remaining updated to the new DAO, and the new Admin API
+  [#3689](https://github.com/Kong/kong/pull/3689), [#3778](https://github.com/Kong/kong/pull/3778),
+  [#3739](https://github.com/Kong/kong/pull/3739)
+- Openssl has been bumped to 1.1.1 [#3761](https://github.com/Kong/kong/pull/3761)
+- luasec bumped to 0.7
+
+##### Plugins
+
+- All bundled plugins' schemas and custom entities have been updated to the new DAO, as well as their APIs
+  APIs [#3839](https://github.com/Kong/kong/pull/3839), [#3766](https://github.com/Kong/kong/pull/3766),
+  [#3774](https://github.com/Kong/kong/pull/3774]
+
+### Additions
+
+##### Service Mesh
+
+- New healthcheck option: `ssl_ctx` [e918513d](https://github.com/Kong/kong/commit/e918513d)
+- Cluster-wide mutex [#3685](https://github.com/Kong/kong/pull/3685)
+- New `origins` config property allows overriding hosts from kong [#3679](https://github.com/Kong/kong/pull/3679)
+- New migration framework [#3802](https://github.com/Kong/kong/pull/3802)
+- Other service-mesh related changes [#3804](https://github.com/Kong/kong/pull/3804)
+
+
+##### Core
+
+- Implemented TTL support in the new DAO & Admin API [#3603](https://github.com/Kong/kong/pull/3603), [#3638](https://github.com/Kong/kong/pull/3638)
+- Schema improvements:
+  - Subschemas [#3630](https://github.com/Kong/kong/pull/3630)
+  - New entity validators: `distinct`, `ne`, `is_regex`,
+  - Conditional validators can mark fields as `required` [6d1707c4](https://github.com/Kong/kong/commit/6d1707c4)
+  - Partial updates of record fields [05adc40f](https://github.com/Kong/kong/commit/05adc40f)
+  - Legacy schemas [b854f6ba](https://github.com/Kong/kong/pull/3739/commits/b854f6ba)
+- Allow disabling keepalive (thanks, [@pryorda](https://github.com/pryorda)!) [#3716](https://github.com/Kong/kong/pull/3716)
+- New DNS ttl-override property [#3730](https://github.com/Kong/kong/pull/3730)
+- Routes can be named [#3764](https://github.com/Kong/kong/pull/3764)
+- Add multipart support to Admin API: [#3776](https://github.com/Kong/kong/pull/3776)
+- New `pg_timeout` config option [#3808](https://github.com/Kong/kong/pull/3808)
+- Improved plugins iterator speed [#3794](https://github.com/Kong/kong/pull/3794)
+- Fixed a problem in the router where certain routes would inject an extra `/` [5be03356](https://github.com/kong/kong/commit/5be03356)
+
+
+##### Plugins
+
+- New options `no_api`, `no_route` & `no_service` & `no_consumer` to limit where plugins can be attached to [#3646](https://github.com/Kong/kong/pull/3646)
+- The `http-log` plugin now accepts buffered logging [#3604](https://github.com/Kong/kong/pull/3604)
+- Custom Entities DAOs can be specified as arrays [f4e8be13](https://github.com/Kong/kong/commit/f4e8be13)
+- All bundled plugins migrations have been converted to the new migration framework
+
+### Fixes
+
+##### Core
+
+- Fix validation of nested records in metaschema [#3588](https://github.com/Kong/kong/pull/3588)
+- Fix kong.db.errors not receiving the name of the current strategy [#3612](https://github.com/Kong/kong/pull/3612)
+- Fix incorrect CRUD event on new DAO [b1c6c903](https://github.com/Kong/kong/commit/b1c6c903d54f0f1ee5009c44911028ffb26d11e5)
+- Fix a problem with paginating SNIs [#3722](https://github.com/Kong/kong/pull/3722)
+- Better handling of null & default values (database & api use NULL, DAO uses nil) [#3772](https://github.com/Kong/kong/pull/3772), [#3710](https://github.com/Kong/kong/pull/3710)
+- Fixed an error when Inferring arguments with `application/x-www-form-urlencoded` on the admin API [#3770](https://github.com/Kong/kong/pull/3770)
+
+
+##### Plugins
+
+
 
 ## [0.14.1]
 
