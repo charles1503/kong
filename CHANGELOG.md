@@ -25,9 +25,6 @@
 > Released on: 2018/11/17
 
 
-
-
-
 ## [0.15.0]
 
 > Released on: 2018/11/17
@@ -36,30 +33,41 @@
 
 ##### Core
 
-- Luaossl version bumped to 20180708 [#3624](https://github.com/Kong/kong/pull/3624)
+- Luaossl version bumped to 20181207 [#4067](https://github.com/Kong/kong/pull/4067)
 - New kong.resty.getssl module [#3681](https://github.com/Kong/kong/pull/3681)
 - Timestaps now allow millisecond precision [#3660](https://github.com/Kong/kong/pull/3660)
 - All entities remaining updated to the new DAO, and the new Admin API
   [#3689](https://github.com/Kong/kong/pull/3689), [#3778](https://github.com/Kong/kong/pull/3778),
   [#3739](https://github.com/Kong/kong/pull/3739)
-- Openssl has been bumped to 1.1.1 [#3761](https://github.com/Kong/kong/pull/3761)
+- Openssl has been bumped to 1.1.1a [#4005](https://github.com/Kong/kong/pull/4005)
 - luasec bumped to 0.7
+- The schema's `nullable` field attribute has been unified into `required` [#3992](https://github.com/Kong/kong/pull/3992)
+- The PDK function `kong.request.get_body` will now error when the body is valid json which isn't an object or array [#4063](https://github.com/Kong/kong/pull/4063)
+
 
 ##### Plugins
 
 - All bundled plugins' schemas and custom entities have been updated to the new DAO, as well as their APIs
   APIs [#3839](https://github.com/Kong/kong/pull/3839), [#3766](https://github.com/Kong/kong/pull/3766),
-  [#3774](https://github.com/Kong/kong/pull/3774]
+  [#3774](https://github.com/Kong/kong/pull/3774]), #[3778](https://github.com/Kong/kong/pulls/3778)
+  [#3839](https://github.com/Kong/kong/pull/3839)
+
 
 ### Additions
 
-##### Service Mesh
+##### Service Mesh and Stream Routers
 
-- New healthcheck option: `ssl_ctx` [e918513d](https://github.com/Kong/kong/commit/e918513d)
+- Support for TCP streams [#4009](https://github.com/Kong/kong/pull/4009)
+- New healthcheck option `ssl_ctx`, used for stablishing TLS [e918513d](https://github.com/Kong/kong/commit/e918513d), [#3855](https://github.com/Kong/kong/pull/3855)
 - Cluster-wide mutex [#3685](https://github.com/Kong/kong/pull/3685)
 - New `origins` config property allows overriding hosts from kong [#3679](https://github.com/Kong/kong/pull/3679)
 - New migration framework [#3802](https://github.com/Kong/kong/pull/3802)
-- Other service-mesh related changes [#3804](https://github.com/Kong/kong/pull/3804)
+- Certificate Authority management [#3906](https://github.com/Kong/kong/pull/3906)
+- Transparent listeners [#3884](https://github.com/Kong/kong/pull/3884)
+- Plugins have a `run_on` field to control how they behave on a Service Mesh environment [#3930](https://github.com/Kong/kong/pull/3930) & [#4066](https://github.com/Kong/kong/pull/4066)
+- Other service-mesh related changes [#3804](https://github.com/Kong/kong/pull/3804), [#3861](https://github.com/Kong/kong/pull/3861),
+  [#3851](https://github.com/Kong/kong/pull/3851), [#4046](https://github.com/Kong/kong/pull/4046)
+
 
 
 ##### Core
@@ -67,10 +75,11 @@
 - Implemented TTL support in the new DAO & Admin API [#3603](https://github.com/Kong/kong/pull/3603), [#3638](https://github.com/Kong/kong/pull/3638)
 - Schema improvements:
   - Subschemas [#3630](https://github.com/Kong/kong/pull/3630)
-  - New entity validators: `distinct`, `ne`, `is_regex`,
+  - New entity validators: `distinct`, `ne`, `is_regex`, `contains`, `gt`
   - Conditional validators can mark fields as `required` [6d1707c4](https://github.com/Kong/kong/commit/6d1707c4)
   - Partial updates of record fields [05adc40f](https://github.com/Kong/kong/commit/05adc40f)
   - Legacy schemas [b854f6ba](https://github.com/Kong/kong/pull/3739/commits/b854f6ba)
+  - Performance improvements in entity checks [#3848](https://github.com/Kong/kong/pull/3848)
 - Allow disabling keepalive (thanks, [@pryorda](https://github.com/pryorda)!) [#3716](https://github.com/Kong/kong/pull/3716)
 - New DNS ttl-override property [#3730](https://github.com/Kong/kong/pull/3730)
 - Routes can be named [#3764](https://github.com/Kong/kong/pull/3764)
@@ -78,6 +87,13 @@
 - New `pg_timeout` config option [#3808](https://github.com/Kong/kong/pull/3808)
 - Improved plugins iterator speed [#3794](https://github.com/Kong/kong/pull/3794)
 - Fixed a problem in the router where certain routes would inject an extra `/` [5be03356](https://github.com/kong/kong/commit/5be03356)
+- Add support for https in active healthchecks [#3815](https://github.com/Kong/kong/pull/3815)
+- New `kong.node` module in the PDK [#3826](https://github.com/Kong/kong/pulls/3826)
+- New PDK function: `kong.response.get_path_with_query` [#3842](https://github.com/Kong/kong/pull/3842)
+- PDK getters and setters for Service, Route, Consumer & Credential [#3916](https://github.com/Kong/kong/pull/3916)
+- `kong.response.get_source` returns `error` on errors [#4006](https://github.com/Kong/kong/pull/4006)
+- `kong.response.exit` can be used in `header_filter` phase, but only without a body [#4039](https://github.com/Kong/kong/pull/4039)
+- The `kong migrations up` command now accepts a `--force` parameter to re-run migrations [#4071](https://github.com/Kong/kong/pull/4071)
 
 
 ##### Plugins
@@ -86,20 +102,48 @@
 - The `http-log` plugin now accepts buffered logging [#3604](https://github.com/Kong/kong/pull/3604)
 - Custom Entities DAOs can be specified as arrays [f4e8be13](https://github.com/Kong/kong/commit/f4e8be13)
 - All bundled plugins migrations have been converted to the new migration framework
+- Most plugin logic (exceptions) have been ported to / rewritten with the PDK functions [#3845](https://github.com/Kong/kong/pull/3845)
+- Plugins in general have been made more resilient to failures / unexpected input
+  [#4006](https://github.com/Kong/kong/pull/4006), [#3947](https://github.com/Kong/kong/pull/3947), [#4038](https://github.com/Kong/kong/pull/4038)
+
 
 ### Fixes
 
 ##### Core
 
-- Fix validation of nested records in metaschema [#3588](https://github.com/Kong/kong/pull/3588)
-- Fix kong.db.errors not receiving the name of the current strategy [#3612](https://github.com/Kong/kong/pull/3612)
-- Fix incorrect CRUD event on new DAO [b1c6c903](https://github.com/Kong/kong/commit/b1c6c903d54f0f1ee5009c44911028ffb26d11e5)
-- Fix a problem with paginating SNIs [#3722](https://github.com/Kong/kong/pull/3722)
+- Fixed validation of nested records in metaschema [#3588](https://github.com/Kong/kong/pull/3588)
+- Fixed kong.db.errors not receiving the name of the current strategy [#3612](https://github.com/Kong/kong/pull/3612)
+- Fixed incorrect CRUD event on new DAO [#3659](https://github.com/Kong/kong/pull/3659)
+- Fixed a problem with paginating SNIs [#3722](https://github.com/Kong/kong/pull/3722)
 - Better handling of null & default values (database & api use NULL, DAO uses nil) [#3772](https://github.com/Kong/kong/pull/3772), [#3710](https://github.com/Kong/kong/pull/3710)
+- Improved the way default values work on structures [#3910](https://github.com/Kong/kong/pull/3910)
 - Fixed an error when Inferring arguments with `application/x-www-form-urlencoded` on the admin API [#3770](https://github.com/Kong/kong/pull/3770)
+- Fixed a problem in the calculation of the cache_key field [#3831](https://github.com/Kong/kong/pulls/3831)
+- Handle correctly a case in which $request_uri can be nil [#3842](https://github.com/Kong/kong/pull/3842)
+- Fixed a problem in handling primary key violations in Cassandra [#3865](https://github.com/Kong/kong/pull/3865)
+- Several typos, style and grammar fixes by [@saideepd](https://github.com/saideepd), [@gy741](https://github.com/gy741), [@arpitpandey0209](https://github.com/arpitpandey0209), [@joelvisroman](https://github.com/joealvisroman), [@vkmrishad](https://github.com/vkmrishad), [@mr-yamraj](https://github.com/mr-yamraj), [@geekysrm](https://github.com/geekysrm), [@Mehvix](https://github.com/Mehvix), [@vyaspranjal33](https://github.com/vyaspranjal33), [@iTechTR](https://github.com/iTechTR), [@shyamjalan ](https://github.com/shyamjalan ), and [@steffinstanly](https://github.com/@steffinstanly).
+- Fixed an issue with Datastax Enterprise 6.X (thanks, [@gchristidis](https://github.com/gchristidis)) [#3873](https://github.com/Kong/kong/pull/3873)
+- Fixed a problem with Posgresql's `connector.iterate` function [#3887](https://github.com/Kong/kong/pull/3887)
+- Conditionals can handle structured data correctly in the schema [#3936](https://github.com/Kong/kong/pull/3936)
+- Fixed an issue where a recently-created upstream returns `{}` instead of `[]` for its initial list of targets [#4058](https://github.com/Kong/kong/pull/4058)
+- The postgres strategy had an off-by-one error when creating array index expressions. This has been fixed [#4078](https://github.com/Kong/kong/pull/4078)
+- Fixed an issue where a semaphore protecting the router was not released when an error happened [#4084](https://github.com/Kong/kong/pull/4084) & [#4098](https://github.com/Kong/kong/pull/4098)
+- Fixed an issue where update cluster events were triggered twice instead of once [#4095](https://github.com/Kong/kong/pull/4095)
 
 
 ##### Plugins
+
+- Fixed records being nullable in plugin subschemas [#3778](https://github.com/Kong/kong/pulls/3778)
+- CORS: set 'Vary: Origin' when ACAC is enabled (thanks, (@marckhouzam)[https://github.com/marckhouzam]!) [#3675](https://github.com/Kong/kong/pull/3765)
+- CORS: return HTTP 200 instead of 204 for preflight requests (thanks, [@aslafy-z](https://github.com/aslafy-z)!) [#4029](https://github.com/Kong/kong/pull/4029)
+- CORS: flat strings are now validated safely [0eaa9acd](https://github.com/Kong/kong/commit/0eaa9acd)
+- ACL: fixed a situation in which the plugin cache was not reset when editing ACLs [#3839](https://github.com/Kong/kong/pull/3839)
+- ACL: the plugin now uses its cache for intermediary config correctly [#4040](https://github.com/Kong/kong/pull/4040)
+- Correlation-id: Prevent an error to be thrown when the Access phase was skipped [#3924](https://github.com/Kong/kong/issues/3924)
+- AWS-lambda: Strip headers disallowed by HTTP/2 [#f2ee98e2](https://github.com/Kong/kong/commit/f2ee98e2)
+- Ratelimiting & Response-ratelimiting: Fixed a problem where an unnecessary call to `redis:select` could close connections
+  (thanks, [@fffonion](https://github.com/fffonion)!) [#3973](https://github.com/Kong/kong/pull/3973)
+- Fixed an issue where some plugins could include default HTML responses from the Lapis if certain conditions where met. [#4077](https://github.com/Kong/kong/pull/4077)
 
 
 
